@@ -31,26 +31,31 @@ README 已显式分离两者：Grok 事件作为"起源事实"保留在信息来
 
 ---
 
-## 3. Engine ≠ Asset（架构哲学，已落地）
+## 3. Asset 必须能脱离 Engine 独立存在（核心设计约束）
 
-项目里存在两类性质完全不同的东西：
+> Engine ≠ Asset 不是一句观察——它是一个**设计约束**：资产必须能脱离任何单一引擎独立存在、被读取、被校验、被其他工具消费。
 
-- **Engine（执行器）= 脚本**（`.ps1` / `.sh`）：可替换、可移植、随平台变化。
-- **Asset（资产）= 规则库**（`rule-object` + 治理元数据）：这是项目真正长期沉淀的部分。
+### 3.1 两类性质不同的东西
+- **Engine（执行器）= 脚本**（`.ps1` / `.sh`）：可替换、可移植、随平台变化，是契约的一个**解释器**。
+- **Asset（资产）= 规则契约**（`rule-object` + 治理元数据）：这是项目真正长期沉淀的部分，**即使删除所有脚本仍是一份完整资产**。
 
-这一区分不是愿景，而是已经在架构中实现的：
-- `rules/exfil_signatures.json` 采用 **v0.2 Rule-Object schema**（`rule_id` + `confidence` + `evidence` + `references` + `platforms` + `introduced` + `last_updated`）。
-- `rules/SCHEMA.md` 定义了规则如何进入系统（提交 PR = 提交一个规则对象）。
-- CI（`validate-rules.yml`）校验的是**规则契约**，不是脚本逻辑。
+### 3.2 引擎无关性（Engine-Independence）是本设计的硬约束
+规则库不内嵌任何特定引擎的私有逻辑。这意味着：
+- 规则库是一份**可独立存在的 JSON**——任何人（或任何工具）可直接读、校验、消费，无需运行本仓库的执行器。
+- CI（`validate-rules.yml`）校验的是**契约合法性**，而非某个脚本的行为。
+- 参考引擎 `agent-leak-guard` 只是契约的一个实现；你可以只用规则库，也可以把规则库接入你自己的工具链。
 
-**未来可消费同一份规则的多类载体：**
+### 3.3 类比：这不是新发明
+- **JSON Schema**：定义数据结构契约，任何编程语言都能消费，无需依赖某个特定解析器。本项目的 `rule-object` 同理——规则是契约，引擎是消费方。
+- **YARA**：安全社区用"规则文件 + 独立引擎"的范式做恶意软件检测数十年。规则可移植、引擎可替换。本项目的定位正是把同一范式应用到 **AI Agent 本地安全**这一新域。
+
+### 3.4 未来可消费同一份规则的多类载体（Consumer Framework）
+当规则可被多载体消费时，项目核心从 `agent-leak-guard`（某个执行器）迁移到 `AI Agent Security Rules`（规则生态）：
 - 操作系统：Windows / Linux / macOS 原生 Guard
 - IDE 插件：VS Code / JetBrains
 - 企业：SIEM / EDR
 
-当规则可被多载体消费时，项目核心就从 `agent-leak-guard`（某个执行器）迁移到 `AI Agent Security Rules`（规则生态）。脚本只是引擎，规则库才是资产。
-
----
+规则库是资产，脚本是引擎——这句话的严格含义是：**资产的可消费性不依赖于引擎的存在**。
 
 ## 4. North Star（未来定位）
 
@@ -58,6 +63,8 @@ README 已显式分离两者：Grok 事件作为"起源事实"保留在信息来
 - **未来（若社区成型）**：Open Rule Framework for AI Agent Local Security
 
 这一迁移的标志是：外部贡献者提交的是 `Rule / Metadata / Evidence / Confidence`，而不是 `PowerShell`。
+
+> **不是自封标准**：Open Rule Framework 是社区演化的*可能方向*，而非我们单方面宣布的行业标准。它能否成立，取决于外部工具、厂商、研究者是否真正采用这份规则契约。在获得外部采用之前，它只是一个设计姿态。
 
 ---
 
