@@ -14,12 +14,15 @@
 ## 提交新特征 (new_signature) 规范
 
 1. **必须附公开来源**：链接到公开报告 / 官方文档 / 可复现的流量/配置审计。本仓库**不做任何未经证实的法律定性**。
-2. **字段对齐** `rules/exfil_signatures.json`：
-   - `exfil_endpoints`：可解析的 FQDN（标注 `resolve: true` 用于运行时 DNS 监控）
-   - `exfil_indicators`：不可解析的 URI / 二进制字符串（用于配置与进程内存扫描）
-   - `ai_cli_list`：二进制名 + 配置文件路径 + 明文密钥字段
-3. **追加即可**：往对应数组 append 一个 JSON 对象，**无需改代码**。
+2. **字段对齐** `rules/exfil_signatures.json`（v0.2 Rule-Object，详见 `rules/SCHEMA.md`）：
+   - `exfil_endpoints`：FQDN（`rule_id` 形如 `ALG-E###`，标注 `resolve: true` 用于运行时 DNS 监控）
+   - `exfil_indicators`：不可解析的 URI / 二进制字符串（`rule_id` 形如 `ALG-I###`）
+   - `ai_cli_list`：二进制名 + 配置文件路径 + 明文密钥字段（`rule_id` 形如 `ALG-C###`）
+   - **每条规则必须携带治理字段**：`rule_id` / `confidence` / `evidence` / `references` / `platforms` / `introduced` / `last_updated`
+3. **提交规则对象**：往对应数组 append 一个完整 Rule Object（含 `rule_id` + 治理字段），**无需改代码**。CI 会自动校验 schema（见 `validate-rules.yml`）。
 4. **同步** `rules/changelog.md` 与 `rules/VERSION`（规则集独立版本号）。
+
+> 设计哲学：提交 PR = 提交一个**规则对象**，而不是简单改 JSON。把"规则如何进入系统"制度化，是本项目从 Tool 走向 Framework 的核心。
 
 ## 本地验证
 
