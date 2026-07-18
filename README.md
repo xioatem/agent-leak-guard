@@ -131,6 +131,8 @@ sudo ./agent-leak-guard.sh guard
 - 当前所有代码与规则**完全免费、可商用**。
 - 未来若出现集中管理、规则同步、审计、团队协作等**企业级能力**，将作为**独立专有层**消费这套开放规则——绝不反向限制规则资产本身的开放性。
 
+**两层保护（License vs Contract）**：License protects contribution —— Apache 2.0 回答“别人能否合法使用”；Contract protects interoperability —— Rule Contract 回答“别人能否技术互操作”。两者缺一不可。
+
 > 商业模式暂不设计。许可证清晰 > 提前设计收费。企业集成 / 厂商合作需求出现时，再据实际场景决定下一步。
 
 #AISecurity #AgentLeak #Grok #ClaudeCode #Cursor #数据泄露 #开发者工具 #代码安全
