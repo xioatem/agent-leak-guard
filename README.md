@@ -108,8 +108,15 @@ sudo ./agent-leak-guard.sh guard
 
 ## Roadmap (v0.2)
 
+### 工程方向
 - **进程内存扫描**：枚举本地 AI Agent 进程，扫描 `repo_state.upload` / `before_codebase` 等泄露特征字符串
 - **macOS 完整阻断**：Guard 模式补 pfctl 自动规则注入（当前 Windows/Linux 已支持）
 - **规则库众包**：新增 Gemini CLI / Codex / Aider 等端点特征
 - **Scan 增强**：除配置 key 字段外，扩展到 env / shell history / .netrc
 - **CI 自检**：本仓库 GitHub Action 自动校验规则库 JSON 合法性（已上线 `validate-rules.yml`）
+
+### 长期北极星（North Star）
+- **当前定位**：AI Agent 本地安全基线（AI Agent Local Security Baseline）。
+- **未来形态**：若社区成型，演进为 **AI Agent 本地安全的开放规则框架**——核心从执行脚本（`agent-leak-guard`）迁移到可被多载体消费的规则生态（`AI Agent Security Rules`：OS 原生 Guard / IDE 插件 / 企业 SIEM·EDR 共用同一份规则库）。
+- 该迁移的标志：外部贡献者提交的是 `Rule / Metadata / Evidence / Confidence`，而不是 `PowerShell`。
+- 详见 [STRATEGY.md](STRATEGY.md)（含 Origin≠Identity、Engine≠Asset 定位逻辑）。
