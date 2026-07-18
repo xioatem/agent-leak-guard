@@ -1,0 +1,22 @@
+name: New Signature
+about: Propose a new exfil endpoint / indicator / cli
+title: "[New Signature] "
+labels: new-signature
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - exfil_endpoints
+        - exfil_indicators
+        - ai_cli_list
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence / source
+      description: Link to a public report. No unverified accusations.
+    validations:
+      required: true
