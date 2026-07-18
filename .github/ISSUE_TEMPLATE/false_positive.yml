@@ -1,0 +1,17 @@
+name: False Positive
+about: Scanner flagged a benign file or string
+title: "[False Positive] "
+labels: false-positive
+body:
+  - type: textarea
+    id: detail
+    attributes:
+      label: What was wrongly flagged
+    validations:
+      required: true
+  - type: input
+    id: rule
+    attributes:
+      label: Which rule / indicator
+    validations:
+      required: false
