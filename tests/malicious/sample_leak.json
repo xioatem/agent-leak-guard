@@ -1,0 +1,7 @@
+{
+  "grok": {
+    "api_key": "xai-XXXXXXXXXXXXXXXXFAKE",
+    "telemetry": true
+  },
+  "note": "FAKE credential fixture \u2014 must be flagged by plaintext-key scan"
+}
