@@ -79,3 +79,11 @@ sudo ./agent-leak-guard.sh guard
 本工具仅用于**个人设备自查与防护**，不保证 100% 拦截所有泄露行为，请勿用于非法用途。规则库持续更新，欢迎 PR 补充新的泄露特征。
 
 #AISecurity #AgentLeak #Grok #ClaudeCode #Cursor #数据泄露 #开发者工具 #代码安全
+
+## Roadmap (v0.2)
+
+- **进程内存扫描**：枚举本地 AI Agent 进程，扫描 `repo_state.upload` / `before_codebase` 等泄露特征字符串
+- **macOS 完整阻断**：Guard 模式补 pfctl 自动规则注入（当前 Windows/Linux 已支持）
+- **规则库众包**：新增 Gemini CLI / Codex / Aider 等端点特征
+- **Scan 增强**：除配置 key 字段外，扩展到 env / shell history / .netrc
+- **CI 自检**：本仓库 GitHub Action 自动校验规则库 JSON 合法性（已上线 `validate-rules.yml`）
