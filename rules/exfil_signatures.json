@@ -1,27 +1,82 @@
 {
-  "version": "0.1",
+  "schema_version": "0.2",
+  "version": "0.2.0",
   "update_time": "2026-07-19",
+  "rule_id_format": "ALG-<type><seq>  (E=endpoint, I=indicator, C=cli)",
+  "confidence_levels": [
+    "confirmed",
+    "observed",
+    "community"
+  ],
   "exfil_endpoints": [
     {
       "name": "Grok Code Session Traces (GCS)",
       "pattern": "grok-code-session-traces.storage.googleapis.com",
       "resolve": true,
       "severity": "critical",
-      "description": "xAI Grok 完整代码会话旁路上传端点 (FQDN, 可 DNS 解析)"
+      "description": "xAI Grok 完整代码会话旁路上传端点 (FQDN, 可 DNS 解析)",
+      "rule_id": "ALG-E001",
+      "confidence": "confirmed",
+      "evidence": [
+        "Public report (wire-level traffic analysis, 2026-07)",
+        "Packet capture"
+      ],
+      "references": [
+        "Hacker News discussion (2026-07): Grok CLI exfil"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "Cursor Telemetry Endpoint",
       "pattern": "telemetry.cursor.sh",
       "resolve": true,
       "severity": "medium",
-      "description": "Cursor 编辑器遥测数据上传端点"
+      "description": "Cursor 编辑器遥测数据上传端点",
+      "rule_id": "ALG-E002",
+      "confidence": "observed",
+      "evidence": [
+        "Config audit",
+        "Community report"
+      ],
+      "references": [
+        "Cursor docs: telemetry endpoints"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "GitHub Copilot Telemetry",
       "pattern": "copilot-telemetry.githubusercontent.com",
       "resolve": true,
       "severity": "medium",
-      "description": "GitHub Copilot 遥测数据端点"
+      "description": "GitHub Copilot 遥测数据端点",
+      "rule_id": "ALG-E003",
+      "confidence": "observed",
+      "evidence": [
+        "Config audit",
+        "Community report"
+      ],
+      "references": [
+        "GitHub Copilot docs: telemetry"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     }
   ],
   "exfil_indicators": [
@@ -29,25 +84,84 @@
       "name": "Grok Codebase Upload Bucket",
       "pattern": "gs://grok-code-session-traces",
       "severity": "critical",
-      "description": "Grok 全仓库状态上传存储桶 (URI, 不可 DNS 解析, 用于配置/二进制字符串扫描)"
+      "description": "Grok 全仓库状态上传存储桶 (URI, 不可 DNS 解析, 用于配置/二进制字符串扫描)",
+      "rule_id": "ALG-I001",
+      "confidence": "confirmed",
+      "evidence": [
+        "Public report (wire-level traffic analysis, 2026-07)",
+        "Packet capture"
+      ],
+      "references": [
+        "Hacker News discussion (2026-07)",
+        "cereblab analysis"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "repo_state.upload payload",
       "pattern": "repo_state.upload",
       "severity": "critical",
-      "description": "代码仓库全量状态上传特征字符串"
+      "description": "代码仓库全量状态上传特征字符串",
+      "rule_id": "ALG-I002",
+      "confidence": "confirmed",
+      "evidence": [
+        "Public report (wire-level traffic analysis, 2026-07)"
+      ],
+      "references": [
+        "cereblab analysis"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "before_codebase pre-upload",
       "pattern": "before_codebase",
       "severity": "high",
-      "description": "代码库上下文预上传特征"
+      "description": "代码库上下文预上传特征",
+      "rule_id": "ALG-I003",
+      "confidence": "observed",
+      "evidence": [
+        "Community research",
+        "Config audit"
+      ],
+      "references": [],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "Claude Code Execution S3",
       "pattern": "s3://anthropic-code-execution-",
       "severity": "high",
-      "description": "Claude Code 代码执行上下文上传存储桶特征"
+      "description": "Claude Code 代码执行上下文上传存储桶特征",
+      "rule_id": "ALG-I004",
+      "confidence": "community",
+      "evidence": [
+        "Community report"
+      ],
+      "references": [],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     }
   ],
   "ai_cli_list": [
@@ -57,7 +171,27 @@
       "binary_unix": "grok",
       "config_win": "%APPDATA%\\grok\\config.json",
       "config_unix": "~/.config/grok/config.json",
-      "key_fields": ["api_key", "auth_token", "xai_api_key"]
+      "key_fields": [
+        "api_key",
+        "auth_token",
+        "xai_api_key"
+      ],
+      "rule_id": "ALG-C001",
+      "confidence": "confirmed",
+      "evidence": [
+        "Config audit",
+        "Public report (2026-07)"
+      ],
+      "references": [
+        "cereblab analysis"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "Claude Code CLI",
@@ -65,7 +199,26 @@
       "binary_unix": "claude",
       "config_win": "%APPDATA%\\Claude\\claude.json",
       "config_unix": "~/.config/claude/claude.json",
-      "key_fields": ["anthropic_api_key", "apiKey", "session_key"]
+      "key_fields": [
+        "anthropic_api_key",
+        "apiKey",
+        "session_key"
+      ],
+      "rule_id": "ALG-C002",
+      "confidence": "observed",
+      "evidence": [
+        "Config audit"
+      ],
+      "references": [
+        "Claude Code docs: config storage"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     },
     {
       "name": "Cursor CLI",
@@ -73,7 +226,26 @@
       "binary_unix": "cursor",
       "config_win": "%APPDATA%\\Cursor\\User\\settings.json",
       "config_unix": "~/.config/Cursor/User/settings.json",
-      "key_fields": ["cursor.apiKey", "auth.token", "access_token"]
+      "key_fields": [
+        "cursor.apiKey",
+        "auth.token",
+        "access_token"
+      ],
+      "rule_id": "ALG-C003",
+      "confidence": "observed",
+      "evidence": [
+        "Config audit"
+      ],
+      "references": [
+        "Cursor docs: settings storage"
+      ],
+      "platforms": [
+        "Windows",
+        "Linux",
+        "macOS"
+      ],
+      "introduced": "v0.1.0",
+      "last_updated": "2026-07-19"
     }
   ]
 }
