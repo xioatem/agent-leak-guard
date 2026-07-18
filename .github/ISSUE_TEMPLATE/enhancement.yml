@@ -1,0 +1,11 @@
+name: Enhancement
+about: Feature or improvement idea
+title: "[Enhancement] "
+labels: enhancement
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Describe the enhancement
+    validations:
+      required: true
