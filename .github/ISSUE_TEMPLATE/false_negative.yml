@@ -1,0 +1,11 @@
+name: False Negative (Missed detection)
+about: A known-leak pattern was NOT detected
+title: "[False Negative] "
+labels: false-negative
+body:
+  - type: textarea
+    id: detail
+    attributes:
+      label: What should have been detected
+    validations:
+      required: true
