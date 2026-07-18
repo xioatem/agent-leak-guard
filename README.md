@@ -17,6 +17,24 @@
 
 > 本工具与文档基于**已公开的安全报告**与**用户设备配置审计**，对所涉厂商**不做任何未经证实的法律定性**。
 
+---
+
+## 🧩 核心资产：规则契约（Rule Contract）
+
+> 本项目的长期资产**不是脚本，而是规则契约**——一份可独立存在、可被多引擎消费的泄露特征库。
+> 即使明天删除所有 `.ps1` / `.sh`，`rules/exfil_signatures.json` 仍是一份完整、可被读取、可被校验、可被其他工具消费的规则资产。
+
+规则库采用 **v0.2 Rule-Object schema**（详见 [rules/SCHEMA.md](rules/SCHEMA.md)）：
+
+- `exfil_endpoints`：FQDN 泄露端点（`resolve: true` 表示运行时 DNS 解析并监控 IP）。
+- `exfil_indicators`：不可解析的 URI / 二进制字符串特征（用于配置与进程内存扫描）。
+- `ai_cli_list`：主流 AI CLI 的二进制名、配置文件路径、明文密钥字段。
+- 每条规则携带治理元数据：`rule_id`（`ALG-EXXX`）/ `confidence` / `evidence` / `references` / `platforms` / `introduced` / `last_updated`。
+
+**引擎无关性（Engine-Independence）是本设计的核心约束**：规则库不内嵌任何特定引擎的私有逻辑；脚本只是契约的一个解释器。CI（[validate-rules.yml](../../.github/workflows/validate-rules.yml)）校验的是**契约合法性**，而非某个脚本的行为。任何第三方工具——IDE 插件、企业 SIEM、EDR——都可以直接读取同一份 JSON，无需依赖本仓库的执行器。
+
+新增规则 = 提交一个 Rule Object（见 [CONTRIBUTING.md](CONTRIBUTING.md)），无需改代码。
+
 ## 🔥 为什么你需要这个
 
 近期多款主流 AI 编码助手被曝出**静默上传 / 明文存密钥**相关争议：
@@ -51,7 +69,11 @@
 
 ---
 
-## 🚀 快速开始
+---
+
+## 🚀 参考引擎（Reference Engine）：agent-leak-guard
+
+> 下面的脚本只是规则契约的一个**参考实现（Reference Engine）**——可替换、可移植。真正的资产是上方「规则契约」。你可以只用规则库，也可以把规则库接入你自己的工具链。
 
 ### Windows (PowerShell)
 ```powershell
@@ -84,16 +106,6 @@ sudo ./agent-leak-guard.sh guard
 
 ---
 
-## 🧩 规则库结构 (`rules/exfil_signatures.json`)
-
-- `exfil_endpoints`：FQDN 泄露端点（`resolve: true` 表示运行时 DNS 解析并监控 IP）。
-- `exfil_indicators`：不可解析的 URI / 二进制字符串特征（用于配置与进程内存扫描）。
-- `ai_cli_list`：主流 AI CLI 的二进制名、配置文件路径、明文密钥字段。
-
-新增规则只需往对应数组追加 JSON 对象，无需改代码。
-
----
-
 ## ⚖️ 法律与安全声明
 
 1. **非法律意见**：本工具与文档**不构成法律意见**，也**未对任何厂商作出最终法律定性**。所有结论基于公开报告与用户设备自查，可能随版本/时间变化。
@@ -117,6 +129,6 @@ sudo ./agent-leak-guard.sh guard
 
 ### 长期北极星（North Star）
 - **当前定位**：AI Agent 本地安全基线（AI Agent Local Security Baseline）。
-- **未来形态**：若社区成型，演进为 **AI Agent 本地安全的开放规则框架**——核心从执行脚本（`agent-leak-guard`）迁移到可被多载体消费的规则生态（`AI Agent Security Rules`：OS 原生 Guard / IDE 插件 / 企业 SIEM·EDR 共用同一份规则库）。
+- **未来形态**：若社区成型，演进为 **AI Agent 本地安全的开放规则框架（Open Rule Framework）**——核心从执行脚本（`agent-leak-guard`）迁移到可被多载体消费的规则生态（OS 原生 Guard / IDE 插件 / 企业 SIEM·EDR 共用同一份规则库）。**这是社区演化的可能方向，不是自封标准；能否成立取决于外部采用。**
 - 该迁移的标志：外部贡献者提交的是 `Rule / Metadata / Evidence / Confidence`，而不是 `PowerShell`。
 - 详见 [STRATEGY.md](STRATEGY.md)（含 Origin≠Identity、Engine≠Asset 定位逻辑）。
